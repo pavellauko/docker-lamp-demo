@@ -12,16 +12,26 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     make \
     curl \
-    vim
+    vim \
+    sqlite3 \
+    libsqlite3-dev \
+    libonig-dev
 
-RUN curl https://www.php.net/distributions/php-5.6.40.tar.gz > /tmp/php-5.6.40.tar.gz
+RUN apt-get update && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 04EE7237B7D453EC && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EF0F382A1A7B6500 && \
+    apt-get install -y pkg-config
 
-RUN cd /tmp && tar -zxvf php-5.6.40.tar.gz
-RUN cd /tmp/php-5.6.40 && \
+RUN curl https://www.php.net/distributions/php-7.4.32.tar.gz > /tmp/php-7.4.32.tar.gz
+
+RUN cd /tmp && tar -zxvf php-7.4.32.tar.gz
+RUN cd /tmp/php-7.4.32 && \
     ./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql --with-mysqli=/usr/bin/mysql_config \
-    --enable-mbstring && \
+    && \
     make && make install
-RUN rm -rf /tmp/php-5.6.40
+RUN rm -rf /tmp/php-7.4.32
 
 WORKDIR /var/www/lamp-demo
 RUN mkdir -p /var/log/apache2
